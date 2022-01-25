@@ -18,11 +18,17 @@ namespace CSharpTest
             DateTime currentDate = startDate;
 
             // Check weekends by null
-            if (weekEnds == null)
+            if (weekEnds == null || currentDate.CompareTo(weekEnds[weekEnds.Length - 1].EndDate) > 0)
             {
                 return currentDate.AddDays(dayCount - 1);
             }
-            
+
+            // Check by if startdate is equal last day of last weekend in array
+            if (currentDate.CompareTo(weekEnds[weekEnds.Length - 1].EndDate) == 0)
+            {
+                return currentDate.AddDays(dayCount);
+            }
+
             // Init Counters
             int dayCounter = 0;
             int weekEndsCounter = 0;
@@ -30,24 +36,45 @@ namespace CSharpTest
             // Length of weekends array
             int weekEndsArrLength = weekEnds.Length;
 
-            // Current weekend
+            // Find current weekend range
             WeekEnd currentWeekEnds = weekEnds[weekEndsCounter];
+            while (currentDate.CompareTo(currentWeekEnds.EndDate) > 0 && weekEndsCounter + 1 < weekEndsArrLength)
+            {
+                // Change currentWeekEnds by next
+                currentWeekEnds = weekEnds[++weekEndsCounter];
+            }
+
+            // Check current date by entering in current weekends
+            if (currentDate.CompareTo(currentWeekEnds.StartDate) >= 0)
+            {
+                // Set currentDate as last day of cuurent weekend + 1 day
+                currentDate = currentWeekEnds.EndDate.AddDays(1);
+
+                // Check if exist next weekends
+                if (weekEndsCounter + 1 < weekEndsArrLength)
+                {
+                    currentWeekEnds = weekEnds[++weekEndsCounter];
+                }
+            }
 
             // Main loop
             while (dayCounter < dayCount)
             {
+                // Temp current date
+                DateTime tmp = currentDate;
+
                 // Check current date by currentWeekend
-                if (currentDate.Equals(currentWeekEnds.StartDate))
+                while (tmp.Equals(currentWeekEnds.StartDate))
                 {
                     // Jump to the last date of weekend to skip it
                     currentDate = currentWeekEnds.EndDate;
+                    tmp = currentDate.AddDays(1);
 
                     // Chang currentWeekends to next if it exist
                     if (weekEndsCounter + 1 < weekEndsArrLength)
-                    {
-                        weekEndsCounter++;
+                    { 
                         currentDate = currentWeekEnds.EndDate;
-                        currentWeekEnds = weekEnds[weekEndsCounter];
+                        currentWeekEnds = weekEnds[++weekEndsCounter];
                     }
                 }
 
