@@ -19,6 +19,17 @@ namespace CSharpTest
         }
 
         [TestMethod]
+        public void TestNoWeekEnd_And_CountOne()
+        {
+            DateTime startDate = new DateTime(2021, 12, 1);
+            int count = 1;
+
+            DateTime result = new WorkDayCalculator().Calculate(startDate, count, null);
+
+            Assert.AreEqual(startDate.AddDays(count - 1), result);
+        }
+
+        [TestMethod]
         public void TestNormalPath()
         {
             DateTime startDate = new DateTime(2021, 4, 21);
@@ -30,7 +41,7 @@ namespace CSharpTest
 
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
 
-            Assert.IsTrue(result.Equals(new DateTime(2021, 4, 28)));
+            Assert.AreEqual(result, new DateTime(2021, 4, 28));
         }
 
         [TestMethod]
@@ -46,7 +57,7 @@ namespace CSharpTest
 
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
 
-            Assert.IsTrue(result.Equals(new DateTime(2021, 4, 28)));
+            Assert.AreEqual(result, new DateTime(2021, 4, 28));
         }
 
         [TestMethod]
@@ -64,7 +75,7 @@ namespace CSharpTest
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
 
             // Asserts
-            Assert.IsTrue(result.Equals(new DateTime(2021, 4, 26)));
+            Assert.AreEqual(result, new DateTime(2021, 4, 26));
         }
 
         [TestMethod]
@@ -88,7 +99,7 @@ namespace CSharpTest
         }
 
         [TestMethod]
-        public void TestWeekEndBeforeStartDate()
+        public void TestWeekEndBeforeStartDate1()
         {
             // Arrange 
             DateTime startDate = new DateTime(2021, 4, 28);
@@ -104,7 +115,27 @@ namespace CSharpTest
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
 
             // Asserts
-            Assert.IsTrue(result.Equals(new DateTime(2021, 5, 4)));
+            Assert.AreEqual(result, new DateTime(2021, 5, 4));
+        }
+
+        [TestMethod]
+        public void TestWeekEndBeforeStartDate2()
+        {
+            // Arrange 
+            DateTime startDate = new DateTime(2021, 4, 28);
+            int count = 1;
+            WeekEnd[] weekends = new WeekEnd[3]
+            {
+                new WeekEnd(new DateTime(2021, 4, 20), new DateTime(2021, 4, 21)),
+                new WeekEnd(new DateTime(2021, 4, 28), new DateTime(2021, 4, 28)),
+                new WeekEnd(new DateTime(2021, 4, 30), new DateTime(2021, 4, 30))
+            };
+
+            // Act
+            DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
+
+            // Asserts
+            Assert.AreEqual(result, new DateTime(2021, 4, 29));
         }
 
         [TestMethod]
@@ -124,7 +155,7 @@ namespace CSharpTest
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
 
             // Asserts
-            Assert.IsTrue(result.Equals(new DateTime(2021, 5, 2)));
+            Assert.AreEqual(result, new DateTime(2021, 5, 2));
         }
 
         [TestMethod]
@@ -144,7 +175,7 @@ namespace CSharpTest
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
 
             // Asserts
-            Assert.IsTrue(result.Equals(new DateTime(2021, 4, 18)));
+            Assert.AreEqual(result, new DateTime(2021, 4, 18));
         }
 
         [TestMethod]
@@ -163,7 +194,7 @@ namespace CSharpTest
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
 
             // Asserts
-            Assert.IsTrue(result.Equals(new DateTime(2021, 4, 24)));
+            Assert.AreEqual(result, new DateTime(2021, 4, 24));
         }
 
         [TestMethod]
@@ -182,7 +213,7 @@ namespace CSharpTest
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
 
             // Asserts
-            Assert.IsTrue(result.Equals(new DateTime(2021, 4, 25)));
+            Assert.AreEqual(result, new DateTime(2021, 4, 25));
         }
 
         [TestMethod]
@@ -202,7 +233,25 @@ namespace CSharpTest
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
 
             // Asserts
-            Assert.IsTrue(result.Equals(new DateTime(2021, 4, 28)));
+            Assert.AreEqual(result, new DateTime(2021, 4, 28));
+        }
+
+        [TestMethod]
+        public void TestStartDate_Equal_FirstDateOfWeekend()
+        {
+            // Arrange 
+            DateTime startDate = new DateTime(2021, 4, 21);
+            int count = 1;
+            WeekEnd[] weekends = new WeekEnd[1]
+            {
+                new WeekEnd(new DateTime(2021, 4, 21), new DateTime(2021, 4, 25))
+            };
+
+            // Act
+            DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
+
+            // Asserts
+            Assert.AreEqual(result, new DateTime(2021, 4, 26));
         }
     }
 }

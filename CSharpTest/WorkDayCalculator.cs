@@ -30,7 +30,7 @@ namespace CSharpTest
             }
 
             // Init Counters
-            int dayCounter = 0;
+            int dayCounter = 1;
             int weekEndsCounter = 0;
 
             // Length of weekends array
@@ -57,23 +57,21 @@ namespace CSharpTest
                 }
             }
 
+            
+
             // Main loop
             while (dayCounter < dayCount)
             {
-                // Temp current date
-                DateTime tmp = currentDate;
-
                 // Check current date by currentWeekend
-                while (tmp.Equals(currentWeekEnds.StartDate))
+                while (currentDate.Equals(currentWeekEnds.StartDate))
                 {
                     // Jump to the last date of weekend to skip it
-                    currentDate = currentWeekEnds.EndDate;
-                    tmp = currentDate.AddDays(1);
+                    currentDate = currentWeekEnds.EndDate.AddDays(1);
 
                     // Chang currentWeekends to next if it exist
                     if (weekEndsCounter + 1 < weekEndsArrLength)
-                    { 
-                        currentDate = currentWeekEnds.EndDate;
+                    {
+                        //currentDate = currentWeekEnds.EndDate;
                         currentWeekEnds = weekEnds[++weekEndsCounter];
                     }
                 }
